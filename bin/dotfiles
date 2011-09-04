@@ -33,7 +33,7 @@ case $1 in
 		cd $dotdir && git push
     ;;
   update)
-		(cd $dotdir && git pull && git submodule update)
+		(cd $dotdir && git pull; git submodule update)
 		[[ ! -d $HOME/bin ]] && setup_bin_dir
 		link_dotfiles_and_dirs
 		;;
