@@ -21,12 +21,12 @@ setup_bin_dir() {
 link_dotfiles_and_dirs() {
 	for file in $dotdir/.*(N); do
 		if [[ ! -e $HOME/$file:t ]]; then
-			ln -s $file $HOME
+			[[ ! $file:t == 'git' ]] && ln -s $file $HOME
 		fi
 	done
 }
 
-clone_sub_repos() {
+setup_sub_repos() {
 	cd $dotdir
 	for local_repo_name in ${(k)sub_repos}; do
 		git submodule add $sub_repos[$local_repo_name] $local_repo_name
@@ -39,9 +39,7 @@ case $1 in
   install)
     setup_bin_dir
     link_dotfiles_and_dirs
-		cd $dotdir &&
-			git clone $zsh_repo &&
-			git clone $vim_repo
+		setup_sub_repos
     ;;
   push)
 		cd $dotdir && git push
