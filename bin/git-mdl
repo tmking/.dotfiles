@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+project_root=$HOME/Development/mdlogix
+project_dirs=( $project_root/{crms,forms,spice/*(/)} )
+
+function transverse_dirs() {
+  for d in $project_dirs; do
+    cd $d &&
+    echo "=> $@ $PWD"
+    $@
+  done
+}
+
+case $1 in
+  rebase|dcommit|fetch)
+    transverse_dirs git svn $1
+    ;;
+  *)
+    transverse_dirs git $@
+esac

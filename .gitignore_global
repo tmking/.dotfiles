@@ -1,0 +1,11 @@
+.rvmrc
+.DS_Store
+*.psd
+*.PSD
+.sass-cache/
+*.pxm
+vendor/gems/activerecord-sqlserver-adapter-2.3.13/.specification
+config/features.rb
+.bundle/
+.AppleDouble/
+vendor/bundle

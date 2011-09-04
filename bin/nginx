@@ -1,0 +1,15 @@
+#!/bin/zsh
+
+versions=( /opt/homebrew/Cellar/nginx/*(/N) )
+nginx="$versions[-1]/sbin/nginx"
+
+function on_die() {
+    sudo $nginx -s stop
+    exit 0
+}
+
+trap on_die TERM
+
+sudo $nginx $@ &
+
+wait

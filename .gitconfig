@@ -1,0 +1,17 @@
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+[github]
+	user = lordzork
+	token = 4715a54745786350651ef32d31690c29
+[alias]
+	co = checkout
+	ai = add -i
+[user]
+	name = Timothy King
+	email = tmk@lordzork.com
+[core]
+	excludesfile = ~/.gitignore_global
+	pager = less

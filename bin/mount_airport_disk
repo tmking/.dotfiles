@@ -1,0 +1,36 @@
+#!/bin/zsh
+exit
+
+function check_mount() {
+  if mount | grep -q $mount_point; then
+    return 1
+  else
+    return 0
+  fi
+}
+
+function check_network() {
+  network=$(/System/Library/PrivateFrameworks/Apple80211.framework/Versions/Current/Resources/airport -I | grep  -w SSID | tr -d '[:blank:]' | cut -d ':' -f2)
+
+  case $network in
+    lzi) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+target_folder="OWC Mercury Elite AL Pro"
+mount_point=/Volumes/$target_folder
+user="zork"
+password="q1w2e3r4"
+
+if check_network; then
+  [ ! -d "$mount_point" ] && mkdir $mount_point
+  if check_mount; then
+    mount -t afp "afp://$user:$password@airport/$target_folder" $mount_point || \
+      say "There was an error mounting $target_folder"
+  fi
+else
+    [ -d "$mount_point" ] && rmdir $mount_point
+fi
+
+exit $?

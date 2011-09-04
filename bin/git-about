@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+echo User: $(git config --get user.name)
+echo Email: $(git config --get user.email)

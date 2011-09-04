@@ -1,0 +1,42 @@
+#!/bin/zsh
+
+snarf=/opt/homebrew/bin/snarf
+snarf_args="-m"
+#debug=print
+
+trap exit INT
+
+urldecode() 
+{
+	for w in $*; do
+		print $w:gs/%20/_
+	done
+}    
+
+urlencode() 
+{
+	for w in $*; do
+		print $w:gs/\ /%20
+	done
+}    
+
+case $1 in --help)
+        $snarf $1; exit 0
+esac
+
+for arg in "$@"; do
+	a=$(urlencode $arg)
+	am=$(urldecode $a)
+
+	case $arg in 
+		*%20*)		[ -f ${am##*/} ] && skip=1 ;;
+		*" "*)		[ -f ${am##*/} ] && skip=1 ;;
+		*)		[ -f ${arg##*/} ] && skip=
+	esac
+
+	if [ ! "$skip" ]; then
+		$debug $snarf $snarf_args $a && $debug mv -v ${a##*/} ${am##*/} 2>/dev/null
+	fi
+	unset skip
+done
+exit 0

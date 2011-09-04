@@ -1,0 +1,84 @@
+#!/bin/zsh
+
+srcdir=/tmp/nginx-$(date +%Y%m%d)
+gem_path=$(echo $GEM_PATH | cut -d':' -f1)
+[ -n "$gem_path" ] && gem_path=$gem_path/gems || gem_path=$HOME/.gem/ruby/1.8/gems
+passenger_version=$(gem list passenger | grep passenger | cut -d' ' -f2 | tr -d '(),')
+
+get_source()
+{
+    mkdir $srcdir
+
+    cd $srcdir
+
+    wget http://sysoev.ru/nginx/nginx-$version.tar.gz
+
+    $sudo apt-get source nginx   
+}
+
+unpack_source()
+{
+    cd $srcdir/*(/N)
+    
+    uupdate --upstream-version $version ../nginx-$version.tar.gz    
+}
+
+add_passenger_module()
+{
+    if [ -x "$gem_path/passenger-$passenger_version/bin/passenger-install-nginx-module" ]; then
+      ( cd $gem_path/passenger-$passenger_version && rake nginx )
+      local str="--add-module='$gem_path/passenger-$passenger_version/ext/nginx'"
+      local file="$srcdir/nginx-$version/debian/rules"
+      head -n 1 $file >$file.new
+      echo "CONFIGURE_OPTS = $str --http-uwsgi-temp-path=/etc/nginx --http-scgi-temp-path=/etc/nginx" >>$file.new
+      tail -n $(( `wc -l $file | cut -d' ' -f1` - 1  )) $file >>$file.new
+      mv $file.new $file
+    fi
+}
+
+build_source()
+{
+    cd $srcdir/nginx-$version
+    
+    debuild -i -us -uc
+}
+
+install_deb()
+{
+    cd $srcdir
+
+    $sudo dpkg -i nginx_$version*.deb && sudo aptitude hold nginx
+}
+
+cleanup()
+{
+    $sudo rm -Rf $srcdir
+}
+
+help()
+{
+    print "$me:t action"
+    print " actions:"
+    for a in $my_actions; do
+	print "\t$a"
+    done
+}
+
+me=$0
+my_actions=( $(grep "()" $me | tr -d "()" | egrep -v "(help|grep)") )
+[ -z $1 ] && help && exit 1
+
+[ "$UID" = 0 ] || sudo=sudo
+
+version=$1; shift
+
+if [ "$*" ]; then
+    while  [ -n "$*" ]; do
+	$1
+	shift
+    done
+else
+    for a in $my_actions; do
+	$a
+    done
+fi
