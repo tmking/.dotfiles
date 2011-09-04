@@ -24,8 +24,9 @@ link_dotfiles_and_dirs() {
 
 case $1 in
   install)
-    setup_bin_dir
+		cd $dotdir
 		git submodule update --init
+    setup_bin_dir
     link_dotfiles_and_dirs
     ;;
   push)
