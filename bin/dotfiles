@@ -38,8 +38,8 @@ setup_sub_repos() {
 case $1 in
   install)
     setup_bin_dir
-    link_dotfiles_and_dirs
 		setup_sub_repos
+    link_dotfiles_and_dirs
     ;;
   push)
 		cd $dotdir && git push
