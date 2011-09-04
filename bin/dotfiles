@@ -52,7 +52,7 @@ push_submodules() {
   local last_submodule_commit_message
 
   cd $dotdir
-  git submodule status k grep -e '^+' | while read md5 dir branch; do
+  git submodule status | grep -e '^+' | while read md5 dir branch; do
     git add $dir
     (cd $dir && git push)
     last_submodule_commit_message=$(cd $dir; git show --name-status --oneline | head -n 1)
