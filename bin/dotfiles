@@ -22,6 +22,13 @@ link_dotfiles_and_dirs() {
 	done
 }
 
+update_submodules() {
+  cd $dotdir
+  git submodule status | grep -e '^+' | while read md5 dir branch; do
+    git add $dir && git commit -am "New commits in $dir" && git push
+  done
+}
+
 case $1 in
   install)
 		cd $dotdir
@@ -30,7 +37,7 @@ case $1 in
     link_dotfiles_and_dirs
     ;;
   push)
-		cd $dotdir && git push
+		cd $dotdir && git push && update_submodules
     ;;
   update)
 		(cd $dotdir && git pull; git submodule update)
