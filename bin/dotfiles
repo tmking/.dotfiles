@@ -1,11 +1,6 @@
 #!/bin/zsh
 
-typeset -A sub_repos
-
 dotdir=$HOME/.dotfiles
-sub_repos=( .zsh "git://github.com/lordzork/zsh-config.git"
-						.vim "git://github.com/lordzork/dotvim.git"
-						.zsh/plugins/bundler-path-helper "git://github.com/lordzork/zsh-bundler-path-helper.git")
 
 setup_bin_dir() {
 	if [[ -d $HOME/bin ]]; then
@@ -27,20 +22,10 @@ link_dotfiles_and_dirs() {
 	done
 }
 
-setup_sub_repos() {
-	cd $dotdir
-	for local_repo_name in ${(k)sub_repos}; do
-		if [[ ! -e $local_repo_name ]]; then
-			git submodule add -f $sub_repos[$local_repo_name] $local_repo_name
-		fi
-	done
-	git submodule update --init
-}
-
 case $1 in
   install)
     setup_bin_dir
-		setup_sub_repos
+		git submodule update --init
     link_dotfiles_and_dirs
     ;;
   push)
