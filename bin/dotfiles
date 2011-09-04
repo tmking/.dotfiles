@@ -47,12 +47,7 @@ case $1 in
 		cd $dotdir && git push
     ;;
   update)
-		(cd $dotdir
-		git pull &&
-			for dir in .*(/N); do
-				cd $dir && git pull && git submodule update
-			done
-		)
+		(cd $dotdir && git pull && git submodule update)
 		[[ ! -d $HOME/bin ]] && setup_bin_dir
 		link_dotfiles_and_dirs
 		;;
