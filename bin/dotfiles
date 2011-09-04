@@ -1,10 +1,10 @@
 #!/bin/zsh
 
-typeset -A subrepos
+typeset -A sub_repos
 
 dotdir=$HOME/.dotfiles
-sub_repos=( zsh "git://github.com/lordzork/zsh-config.git"
-						vim "git://github.com/lordzork/dotvim.git")
+sub_repos=( .zsh "git://github.com/lordzork/zsh-config.git"
+						.vim "git://github.com/lordzork/dotvim.git")
 
 setup_bin_dir() {
 	if [[ -d $HOME/bin ]]; then
@@ -29,7 +29,7 @@ link_dotfiles_and_dirs() {
 setup_sub_repos() {
 	cd $dotdir
 	for local_repo_name in ${(k)sub_repos}; do
-		git submodule add $sub_repos[$local_repo_name] .$local_repo_name
+		git submodule add $sub_repos[$local_repo_name] $local_repo_name
 	done
 	git submodule init
 	git submodule update
