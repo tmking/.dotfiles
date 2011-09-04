@@ -15,4 +15,4 @@
 
 ## Check the status of everything
 
-    $dotfiles status
+    $ dotfiles status
