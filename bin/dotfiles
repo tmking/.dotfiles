@@ -1,6 +1,7 @@
 #!/bin/zsh
 
 dotdir=$HOME/.dotfiles
+me=$0:t
 
 setup_bin_dir() {
 	if [[ -d $HOME/bin ]]; then
@@ -20,6 +21,23 @@ link_dotfiles_and_dirs() {
 			[[ ! $file:t == .git ]] && ln -s $file $HOME
 		fi
 	done
+}
+
+get_status() {
+  cd $dotdir
+  echo "=> $me:"
+  git status
+  echo ""
+
+  for dir in $(find -type d); do
+    if [[ -d $dir/.git ]]; then
+      if [[ $dir != . ]]; then
+        echo "=> $dir:t:"
+        (cd $dir && git status)
+        echo ""
+      fi
+    fi
+  done
 }
 
 update_submodules() {
@@ -49,6 +67,9 @@ case $1 in
 		[[ ! -d $HOME/bin ]] && setup_bin_dir
 		link_dotfiles_and_dirs
 		;;
+  status)
+    get_status
+    ;;
 	*)
 		echo "usage: $0:t <install | push | update>"
 esac
