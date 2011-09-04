@@ -40,11 +40,19 @@ get_status() {
   done
 }
 
-update_submodules() {
+run_cmd_on_submodules() {
+  cd $dotdir
+  find $PWD -name .gitmodules | while read file; do
+    dir=$file:r
+    (cd $dir; git submodule $@)
+  done
+}
+
+push_submodules() {
   local last_submodule_commit_message
 
   cd $dotdir
-  git submodule status | grep -e '^+' | while read md5 dir branch; do
+  git submodule status k grep -e '^+' | while read md5 dir branch; do
     git add $dir
     (cd $dir && git push)
     last_submodule_commit_message=$(cd $dir; git show --name-status --oneline | head -n 1)
@@ -55,15 +63,15 @@ update_submodules() {
 case $1 in
   install)
 		cd $dotdir
-		git submodule update --init
+    run_cmd_on_submodules update --init
     setup_bin_dir
     link_dotfiles_and_dirs
     ;;
   push)
-		cd $dotdir && git push && update_submodules
+		cd $dotdir && git push && push_submodules
     ;;
   update)
-		(cd $dotdir && git pull; git submodule update)
+		cd $dotdir && git pull; run_cmd_on_submodules update
 		[[ ! -d $HOME/bin ]] && setup_bin_dir
 		link_dotfiles_and_dirs
 		;;
