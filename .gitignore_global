@@ -9,3 +9,6 @@ config/features.rb
 .bundle/
 .AppleDouble/
 vendor/bundle
+global
+config/database.yml
+/Users/zork/Development/paperwoven-stage/config/database.yml

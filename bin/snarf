@@ -1,24 +1,24 @@
 #!/bin/zsh
 
-snarf=/opt/homebrew/bin/snarf
+snarf=/usr/local/homebrew/bin/snarf
 snarf_args="-m"
 #debug=print
 
 trap exit INT
 
-urldecode() 
+urldecode()
 {
 	for w in $*; do
 		print $w:gs/%20/_
 	done
-}    
+}
 
-urlencode() 
+urlencode()
 {
 	for w in $*; do
 		print $w:gs/\ /%20
 	done
-}    
+}
 
 case $1 in --help)
         $snarf $1; exit 0
@@ -28,7 +28,7 @@ for arg in "$@"; do
 	a=$(urlencode $arg)
 	am=$(urldecode $a)
 
-	case $arg in 
+	case $arg in
 		*%20*)		[ -f ${am##*/} ] && skip=1 ;;
 		*" "*)		[ -f ${am##*/} ] && skip=1 ;;
 		*)		[ -f ${arg##*/} ] && skip=
