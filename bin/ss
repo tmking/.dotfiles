@@ -16,6 +16,8 @@ function echo_info() {
 function server_cmd() {
   if [[ -e ./config.ru ]]; then
     bundle exec rails server $@
+  elif [[ -d content ]]; then
+    bundle exec nanoc autocompile
   else
     ./script/server $@
   fi
@@ -26,7 +28,7 @@ function run_server() {
 }
 
 function get_rails_dirs() {
-  dirs=( $devdir/*/app(N) $devdir/*/*/app(N) $devdir/*/*/*app(N) )
+  dirs=( $devdir/*/app(N) $devdir/*/*/app(N) $devdir/*/*/*app(N) $devdir/*/content(N) $devdir/*/*/content(N) $devdir/*/*/*content(N) )
 
   for d in $dirs; do
     local parent=${d%/*}

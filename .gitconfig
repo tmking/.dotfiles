@@ -10,8 +10,11 @@
 	co = checkout
 	ai = add -i
 [user]
-	name = Timothy King
-	email = tmk@lordzork.com
 [core]
 	excludesfile = ~/.gitignore_global
 	pager = less
+[push]
+	default = current
+[user]
+	name = Timothy King
+	email = tmk@lordzork.com

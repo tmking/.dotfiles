@@ -1,0 +1,41 @@
+#!/bin/zsh
+
+dir=$1
+ext=$2
+no_dir_structure=$3
+
+#debug=echo
+
+function artist_and_maybe_album() {
+  if [[ -z $2 ]]; then
+    echo "$artist/"
+  else
+    echo "$artist/$album/"
+  fi
+}
+
+for d in $dir/**/*(/); do
+  dir_stack=( ${(s:/:)d} )
+  artist=$dir_stack[3]
+  album=$dir_stack[4]
+  wtf=$dir_stack[5]
+
+  artist_album=$(artist_and_maybe_album $artist $album)
+
+  if [[ -n $no_dir_structure ]]; then
+    target_dir=$PWD/$ext
+  else
+    if [[ -n $artist ]]; then
+      if [ -n "$wtf" ]; then
+        target_dir="$PWD/$ext/$artist_album$wtf/"
+      else
+        target_dir="$PWD/$ext/$artist_album"
+      fi
+    fi
+  fi
+
+  for f in $d/*.$ext(N); do
+    $debug mkdir -pv $target_dir
+    $debug mv -v $f $target_dir
+  done
+done
