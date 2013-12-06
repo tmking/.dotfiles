@@ -17,7 +17,7 @@ function server_cmd() {
   if [[ -e ./config.ru ]]; then
     bundle exec rails server $@
   elif [[ -d content ]]; then
-    bundle exec nanoc autocompile
+    bundle exec nanoc view
   else
     ./script/server $@
   fi

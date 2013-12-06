@@ -12,3 +12,8 @@ vendor/bundle
 global
 config/database.yml
 /Users/zork/Development/paperwoven-stage/config/database.yml
+test_structure.sql
+/Users/zork/Development/Clients/rentrange.com/db/development_structure.sql
+test_notification.rb
+database.yml-mine
+*.pxm

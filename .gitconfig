@@ -18,3 +18,7 @@
 [user]
 	name = Timothy King
 	email = tmk@lordzork.com
+[branch]
+	autosetuprebase = always
+[pull]
+	rebase = true
