@@ -17,3 +17,5 @@ test_structure.sql
 test_notification.rb
 database.yml-mine
 *.pxm
+hidden_files
+api-keys.yml.erb
