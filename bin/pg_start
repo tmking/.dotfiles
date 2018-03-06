@@ -1,0 +1,3 @@
+#!/bin/sh
+
+/usr/local/bin/postgres -D /usr/local/var/postgres&

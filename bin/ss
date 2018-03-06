@@ -18,6 +18,8 @@ function server_cmd() {
     bundle exec rails server $@
   elif [[ -d content ]]; then
     bundle exec nanoc view
+  elif [[ -d _site ]]; then
+    bundle exec jekyll serve
   else
     ./script/server $@
   fi
@@ -28,7 +30,7 @@ function run_server() {
 }
 
 function get_rails_dirs() {
-  dirs=( $devdir/*/app(N) $devdir/*/*/app(N) $devdir/*/*/*app(N) $devdir/*/content(N) $devdir/*/*/content(N) $devdir/*/*/*content(N) )
+  dirs=( $devdir/*/app(N) $devdir/*/*/app(N) $devdir/*/*/*app(N) $devdir/*/*/*/*app(N) $devdir/*/content(N) $devdir/*/*/content(N) $devdir/*/*/*content(N) $devdir/*/*/_site(N) )
 
   for d in $dirs; do
     local parent=${d%/*}
