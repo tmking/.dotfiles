@@ -14,7 +14,9 @@ function echo_info() {
 }
 
 function server_cmd() {
-  if [[ -e ./config.ru ]]; then
+  if [[ -e Gemfile ]] && `grep -q thin Gemfile`; then
+    bundle exec thin start $@
+  elif [[ -e ./config.ru ]]; then
     bundle exec rails server $@
   elif [[ -d content ]]; then
     bundle exec nanoc view

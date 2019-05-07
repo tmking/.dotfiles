@@ -1,0 +1,24 @@
+#!/bin/zsh
+
+my_ip=$(ifconfig | grep -A3 en0 | grep -w inet | cut -d' ' -f2)
+laptop_ip=192.168.1.151
+imac_ip=192.168.1.160
+sync_list=(Music .ssh/config)
+
+case $my_ip in
+  *$laptop_ip*)
+    dest_ip=$imac_ip
+    ;;
+  *$imac_ip*)
+    dest_ip=$laptop_ip
+    ;;
+  *)
+    echo "We don't seem to be at home right now."
+    exit 1
+esac
+
+
+cd $HOME
+for item in $sync_list; do
+  rsync -a --progress  zork@$dest_ip:$item .
+done
