@@ -1,0 +1,40 @@
+#!/bin/zsh
+
+instances=(mgt.networkforgood.com
+           mgt.networkforgood-demo.com
+           mgt.networkforgood-beta.com
+           mgt.dm.networkforgood.com
+           mgt.dm.networkforgood-demo.com
+           mgt.dm.networkforgood-beta.com
+           mgt-enterprise.networkforgood.com)
+
+email=${1:l}
+cmd="Admin.where(email: '$email').update_all(status: 'inactive')"
+
+for i in $instances; do
+  case $i in
+    mgt.networkforgood*)
+      dir=Givecorps-site
+      ;;
+    mgt.dm.*)
+      dir=donor_management
+      ;;
+    *enterprise*)
+      dir=enterprise
+  esac
+
+  case $i in
+    *demo*)
+      rails_env=demo
+      ;;
+    *beta*)
+      rails_env=beta
+      ;;
+    *)
+      rails_env=production
+  esac
+
+  echo "-> connecting to $i"
+  ssh $i -t "cd $dir && bundle >/dev/null && echo \"${cmd}\" | bundle exec rails c $rails_env"
+  echo "--"
+done
