@@ -3,7 +3,7 @@
 my_ip=$(ifconfig | grep -A3 en0 | grep -w inet | cut -d' ' -f2)
 laptop_ip=192.168.1.151
 imac_ip=192.168.1.160
-sync_list=(Music .ssh/config)
+sync_list=(.ssh/config)
 
 case $my_ip in
   *$laptop_ip*)
