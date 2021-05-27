@@ -1,0 +1,14 @@
+#!/bin/sh
+
+git checkout $1
+git checkout master && git pull
+git checkout develop && git pull
+
+branch=$(echo $1 | cut -d'/' -f2)
+
+git flow hotfix finish -n $branch
+
+git co develop && git push
+git co master && git push
+
+git co master && cd $PWD

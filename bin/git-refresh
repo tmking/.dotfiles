@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+zsh -c 'git co master && git pull && git co develop && git pull && git co uat && git pull && git co master'
