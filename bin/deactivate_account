@@ -1,0 +1,100 @@
+#!/usr/local/bin/zsh
+
+#debug=echo
+
+#instances=(mgt.networkforgood.com)
+instances=(mgt.networkforgood.com
+           mgt.networkforgood-demo.com
+           mgt.networkforgood-beta.com
+           mgt.dm.networkforgood.com
+           mgt.dm.networkforgood-demo.com
+           mgt.dm.networkforgood-beta.com
+           mgt.auctions.networkforgood.com
+           mgt.auctions.networkforgood-beta.com
+           mgt.auctions.networkforgood-demo.com
+           mgt-enterprise.networkforgood.com)
+
+function deactivate_admin()
+{
+  case $i in
+    *.dm*)
+      disabled_status="inactive"
+      ;;
+    *.auctions*)
+      disabled_status="inactive"
+      ;;
+    *)
+      disabled_status="disabled"
+  esac
+  #cmd="Admin.where(email: '$email').update_all(status: '$disabled_status')"
+  cmd="Admin.where('email LIKE ?', '$email%').update_all(status: '$disabled_status')"
+  $debug ssh $i -t "cd $dir && bundle >/dev/null && echo \"${cmd}\" | bundle exec rails c $RAILS_ENV"
+}
+
+function deactivate_mgt()
+{
+  echo "Disabling account and removing public ssh keys for $user"
+  $debug ssh $i -t "grep -q $user /etc/passwd && sudo usermod -L $user; sudo test -e /home/$user/.ssh/authorized_keys && sudo cp -v /dev/null /home/$user/.ssh/authorized_keys"
+}
+
+function help_msg()
+{
+  echo "Usage:"
+  echo "  ${ZSH_ARGZERO:t} admin email@example.com"
+  echo "  ${ZSH_ARGZERO:t} mgt useraccount"
+  exit 1
+}
+
+if [[ "$#" != 2 ]]; then
+  help_msg
+fi
+
+case $1 in
+  admin|mgt)
+    ;;
+  *)
+    help_msg
+esac
+
+for i in $instances; do
+case $i in
+  mgt.networkforgood*)
+    dir=Givecorps-site
+    ;;
+  mgt.dm.*)
+    dir=donor_management
+    ;;
+  mgt.auctions.*)
+    dir=auctions
+    ;;
+  *enterprise*)
+    dir=enterprise
+  esac
+
+  case $i in
+    *demo*)
+      rails_env=demo
+      ;;
+    *beta*)
+      rails_env=beta
+      ;;
+    *)
+      rails_env=production
+  esac
+
+  echo "-> connecting to $i"
+  case $1 in
+    admin)
+      email=$2
+      deactivate_admin
+      ;;
+    mgt)
+      user=$2
+      deactivate_mgt
+      ;;
+    *)
+      exit 127
+      ;;
+  esac
+  echo "--"
+done
